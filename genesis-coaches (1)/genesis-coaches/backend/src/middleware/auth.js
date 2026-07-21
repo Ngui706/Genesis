@@ -16,7 +16,7 @@ export async function requireAuth(req, res, next) {
 
     const { data: profile, error: profileErr } = await supabaseAdmin
       .from('profiles')
-      .select('*')
+      .select('*, branch:branches(id, name, city)')
       .eq('id', userData.user.id)
       .single();
     if (profileErr || !profile) return res.status(401).json({ error: 'Profile not found' });

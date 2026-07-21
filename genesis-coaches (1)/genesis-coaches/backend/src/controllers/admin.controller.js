@@ -178,7 +178,7 @@ export const listStaff = async (req, res, next) => {
   try {
     const { data, error } = await supabaseAdmin
       .from('profiles')
-      .select('*, branch:branches(name)')
+      .select('*, branch:branches(id, name, city)')
       .eq('role', 'staff')
       .order('created_at', { ascending: false });
     if (error) throw new ApiError(500, 'Failed to load staff');
