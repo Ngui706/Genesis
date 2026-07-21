@@ -1,0 +1,12 @@
+{
+  "name": "genesis-coaches",
+  "version": "1.0.0",
+  "description": "**Beyond your Imagination.** A full-stack booking platform: React + Tailwind on the frontend, Express on the backend, Supabase (Postgres + Auth + Realtime) for data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
