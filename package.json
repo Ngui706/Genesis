@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "npm install --prefix \"genesis-coaches (1)/genesis-coaches/backend\"",
+    "build": "npm install --prefix \"genesis-coaches (1)/genesis-coaches/frontend\" && npm run build --prefix \"genesis-coaches (1)/genesis-coaches/frontend\"",
     "start": "npm start --prefix \"genesis-coaches (1)/genesis-coaches/backend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
