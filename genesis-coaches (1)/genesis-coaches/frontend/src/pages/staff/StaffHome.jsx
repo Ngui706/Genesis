@@ -21,11 +21,12 @@ export default function StaffHome() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     apiFetch('/reports/dashboard-summary')
       .then((r) => setSummary(r))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [profile?.branch_id]);
 
   return (
     <div>

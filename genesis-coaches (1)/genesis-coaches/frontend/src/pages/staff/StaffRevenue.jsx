@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../../lib/supabase';
+import { useAuth } from '../../context/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function StaffRevenue() {
+  const { profile } = useAuth();
   const [summary, setSummary] = useState(null);
   const [trend, setTrend] = useState([]);
   const [performance, setPerformance] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([
       apiFetch('/reports/dashboard-summary'),
       apiFetch('/reports/revenue'),
@@ -21,7 +24,7 @@ export default function StaffRevenue() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [profile?.branch_id]);
 
   if (loading) return <p className="text-slate">Loading revenue data…</p>;
 

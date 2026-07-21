@@ -14,7 +14,7 @@ export default function StaffPromos() {
 
   const load = () => apiFetch('/admin/promo-codes').then((r) => setPromos(r.data || [])).catch(() => {});
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [profile?.branch_id]);
 
   const save = async (e) => {
     e.preventDefault();

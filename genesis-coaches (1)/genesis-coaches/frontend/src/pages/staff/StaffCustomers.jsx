@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../../lib/supabase';
+import { useAuth } from '../../context/AuthContext';
 
 export default function StaffCustomers() {
+  const { profile } = useAuth();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    setLoading(true);
     apiFetch('/admin/customers')
       .then((r) => setCustomers(r.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, [profile?.branch_id]);
 
   const filtered = customers.filter(
     (c) =>

@@ -29,7 +29,7 @@ export default function StaffSchedules() {
       .catch(() => {});
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [profile?.branch_id]);
 
   const startCreate = () => {
     setForm(EMPTY);

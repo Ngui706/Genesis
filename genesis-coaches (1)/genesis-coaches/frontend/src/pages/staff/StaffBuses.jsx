@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
+import { useAuth } from '../../context/AuthContext';
 
 const EMPTY = { plate_number: '', name: '', bus_class: 'standard', seat_layout: { rows: 10, columns: 4 }, amenities: [] };
 
@@ -10,9 +11,10 @@ export default function StaffBuses() {
   const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
+  const { profile } = useAuth();
   const load = () => apiFetch('/admin/buses').then((r) => setBuses(r.data || [])).catch(() => {});
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [profile?.branch_id]);
 
   const save = async (e) => {
     e.preventDefault();

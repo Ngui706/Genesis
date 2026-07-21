@@ -33,6 +33,37 @@ export function AuthProvider({ children }) {
     return () => sub.subscription.unsubscribe();
   }, [loadProfile]);
 
+  // Real-time synchronization: listen for admin changes to the logged-in staff's profile
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId) return;
+
+    // 1. Supabase Realtime channel for instant push updates
+    const channel = supabase
+      .channel(`profile-sync-${userId}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
+        async (payload) => {
+          if (payload.eventType === 'DELETE' || (payload.new && payload.new.is_active === false)) {
+            await signOut();
+            return;
+          }
+          await loadProfile(session?.access_token);
+        }
+      )
+      .subscribe();
+
+    // 2. Window focus listener: re-fetch when returning to the tab
+    const onFocus = () => loadProfile(session?.access_token);
+    window.addEventListener('focus', onFocus);
+
+    return () => {
+      supabase.removeChannel(channel);
+      window.removeEventListener('focus', onFocus);
+    };
+  }, [session?.user?.id, session?.access_token, loadProfile]);
+
   const signIn = async (email, password) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
