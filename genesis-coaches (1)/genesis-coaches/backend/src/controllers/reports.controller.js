@@ -1,10 +1,15 @@
 import { supabaseAdmin } from '../config/supabase.js';
 import { ApiError } from '../middleware/errorHandler.js';
 
+const isStaff = (req) => req.profile?.role === 'staff';
+
 /** GET /reports/revenue?from=&to=&branch_id= — revenue trend, branch breakdown, totals */
 export async function revenueReport(req, res, next) {
   try {
-    const { from, to, branch_id } = req.query;
+    // Staff are automatically scoped to their own branch
+    const effectiveBranchId = isStaff(req) ? req.profile.branch_id : req.query.branch_id;
+    const { from, to } = req.query;
+    const branch_id = effectiveBranchId;
     let query = supabaseAdmin
       .from('bookings')
       .select(`
@@ -62,7 +67,7 @@ export async function revenueReport(req, res, next) {
 /** GET /reports/occupancy?branch_id= — seat occupancy rate per schedule (recent trips) */
 export async function occupancyReport(req, res, next) {
   try {
-    const { branch_id } = req.query;
+    const branch_id = isStaff(req) ? req.profile.branch_id : req.query.branch_id;
     const { data: schedules, error } = await supabaseAdmin
       .from('schedules')
       .select('id, departure_time, branch_id, route:routes(origin,destination), bus:buses(total_seats, branch_id)')
@@ -102,7 +107,7 @@ export async function occupancyReport(req, res, next) {
 /** GET /reports/route-performance?branch_id= — bookings & revenue grouped by route */
 export async function routePerformanceReport(req, res, next) {
   try {
-    const { branch_id } = req.query;
+    const branch_id = isStaff(req) ? req.profile.branch_id : req.query.branch_id;
     const { data, error } = await supabaseAdmin
       .from('bookings')
       .select('total_amount, status, schedule:schedules(branch_id, bus:buses(branch_id), route:routes(id, origin, destination))')
@@ -132,7 +137,7 @@ export async function routePerformanceReport(req, res, next) {
 /** GET /reports/dashboard-summary?branch_id= — top-level KPIs for the admin landing dashboard */
 export async function dashboardSummary(req, res, next) {
   try {
-    const { branch_id } = req.query;
+    const branch_id = isStaff(req) ? req.profile.branch_id : req.query.branch_id;
     const [{ count: totalBookings }, { count: totalCustomers }, { count: activeBuses }, { data: revenueRows }] = await Promise.all([
       supabaseAdmin.from('bookings').select('id', { count: 'exact', head: true }).eq('status', 'confirmed'),
       supabaseAdmin.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'customer'),

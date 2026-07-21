@@ -12,6 +12,7 @@ import bookingRoutes from './routes/booking.routes.js';
 import ticketRoutes from './routes/ticket.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import reportsRoutes from './routes/reports.routes.js';
+import { listApprovedBranchUpdates } from './controllers/admin.controller.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -55,6 +56,9 @@ app.use('/api', bookingRoutes);
 app.use('/api', ticketRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/reports', reportsRoutes);
+
+// Public: approved branch news for homepage (no auth required)
+app.get('/api/branch-updates/approved', listApprovedBranchUpdates);
 
 app.use((req, res) => res.status(404).json({ error: 'Not found' }));
 app.use(errorHandler);

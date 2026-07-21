@@ -10,7 +10,18 @@ import SearchResults from './pages/SearchResults';
 import SeatSelection from './pages/SeatSelection';
 import BookingConfirmation from './pages/BookingConfirmation';
 import BookingHistory from './pages/BookingHistory';
-import StaffDashboard from './pages/StaffDashboard';
+
+import StaffLayout from './pages/staff/StaffLayout';
+import StaffHome from './pages/staff/StaffHome';
+import StaffBranch from './pages/staff/StaffBranch';
+import StaffBuses from './pages/staff/StaffBuses';
+import StaffRoutes from './pages/staff/StaffRoutes';
+import StaffSchedules from './pages/staff/StaffSchedules';
+import StaffPromos from './pages/staff/StaffPromos';
+import StaffRevenue from './pages/staff/StaffRevenue';
+import StaffCustomers from './pages/staff/StaffCustomers';
+import StaffNews from './pages/staff/StaffNews';
+import StaffBoarding from './pages/staff/StaffBoarding';
 
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -27,6 +38,7 @@ import Settings from './pages/admin/Settings';
 import AuditLogs from './pages/admin/AuditLogs';
 import ManagePopularRoutes from './pages/admin/ManagePopularRoutes';
 import ManageFeaturedBranches from './pages/admin/ManageFeaturedBranches';
+import ManageBranchUpdates from './pages/admin/ManageBranchUpdates';
 
 export default function App() {
   return (
@@ -44,8 +56,21 @@ export default function App() {
           <Route path="/booking-confirmation/:bookingId" element={<ProtectedRoute><BookingConfirmation /></ProtectedRoute>} />
           <Route path="/bookings" element={<ProtectedRoute><BookingHistory /></ProtectedRoute>} />
 
-          <Route path="/staff" element={<ProtectedRoute roles={['staff', 'admin']}><StaffDashboard /></ProtectedRoute>} />
+          {/* Staff Portal */}
+          <Route path="/staff" element={<ProtectedRoute roles={['staff', 'admin']}><StaffLayout /></ProtectedRoute>}>
+            <Route index element={<StaffHome />} />
+            <Route path="branch" element={<StaffBranch />} />
+            <Route path="buses" element={<StaffBuses />} />
+            <Route path="routes" element={<StaffRoutes />} />
+            <Route path="schedules" element={<StaffSchedules />} />
+            <Route path="promo-codes" element={<StaffPromos />} />
+            <Route path="revenue" element={<StaffRevenue />} />
+            <Route path="customers" element={<StaffCustomers />} />
+            <Route path="news" element={<StaffNews />} />
+            <Route path="boarding" element={<StaffBoarding />} />
+          </Route>
 
+          {/* Admin Portal */}
           <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminLayout /></ProtectedRoute>}>
             <Route index element={<AdminDashboard />} />
             <Route path="branches" element={<ManageBranches />} />
@@ -61,6 +86,7 @@ export default function App() {
             <Route path="audit-logs" element={<AuditLogs />} />
             <Route path="popular-routes" element={<ManagePopularRoutes />} />
             <Route path="featured-branches" element={<ManageFeaturedBranches />} />
+            <Route path="branch-updates" element={<ManageBranchUpdates />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

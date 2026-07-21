@@ -25,6 +25,7 @@ export default function Home() {
   const navigate = useNavigate();
   const popularRoutes = usePublicFetch('/popular-routes');
   const featuredBranches = usePublicFetch('/featured-branches');
+  const branchNews = usePublicFetch('/branch-updates/approved');
 
   return (
     <div>
@@ -162,6 +163,46 @@ export default function Home() {
                         </p>
                       )}
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Branch News & Announcements ── */}
+      {branchNews.length > 0 && (
+        <section className="border-t border-white/10 bg-midnight-3">
+          <div className="mx-auto max-w-6xl px-6 py-16">
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Latest Announcements</p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-cream sm:text-4xl">Branch news &amp; updates</h2>
+            <div className="route-line my-8 max-w-md"><span className="route-line-marker" /></div>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {branchNews.map((news) => (
+                <div
+                  key={news.id}
+                  className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-midnight-2 p-0 shadow-xl shadow-black/20"
+                >
+                  {news.image_url && (
+                    <div
+                      className="h-40 w-full bg-cover bg-center"
+                      style={{ backgroundImage: `url(${news.image_url})` }}
+                    />
+                  )}
+                  <div className="flex flex-1 flex-col p-5">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="rounded-md bg-amber/10 px-2 py-0.5 font-mono text-xs font-semibold text-amber">
+                        {news.branch?.name || 'Genesis Network'}
+                      </span>
+                      <span className="text-xs text-slate">
+                        {new Date(news.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-3 font-display text-lg font-bold text-cream">{news.title}</h3>
+                    <p className="mt-2 text-xs leading-relaxed text-slate line-clamp-4">{news.body}</p>
                   </div>
                 </div>
               ))}

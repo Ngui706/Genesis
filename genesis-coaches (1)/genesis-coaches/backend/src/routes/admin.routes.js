@@ -5,25 +5,25 @@ import * as admin from '../controllers/admin.controller.js';
 const router = Router();
 router.use(requireAuth);
 
-// Branches — admin only
+// Branches — staff can create/view own, admin manages all
 router.get('/branches', requireRole('staff', 'admin'), admin.listBranches);
-router.post('/branches', requireRole('admin'), admin.createBranch);
-router.put('/branches/:id', requireRole('admin'), admin.updateBranch);
+router.post('/branches', requireRole('staff', 'admin'), admin.createBranch);
+router.put('/branches/:id', requireRole('staff', 'admin'), admin.updateBranch);
 router.delete('/branches/:id', requireRole('admin'), admin.deleteBranch);
 
-// Buses — staff can view, admin manages
+// Buses — staff can create/view for their branch, admin unrestricted
 router.get('/buses', requireRole('staff', 'admin'), admin.listBuses);
-router.post('/buses', requireRole('admin'), admin.createBus);
-router.put('/buses/:id', requireRole('admin'), admin.updateBus);
+router.post('/buses', requireRole('staff', 'admin'), admin.createBus);
+router.put('/buses/:id', requireRole('staff', 'admin'), admin.updateBus);
 router.delete('/buses/:id', requireRole('admin'), admin.deleteBus);
 
-// Routes (origin/destination catalog)
+// Routes (origin/destination catalog) — staff can create, admin manages
 router.get('/routes-admin', requireRole('staff', 'admin'), admin.listAllRoutes);
-router.post('/routes-admin', requireRole('admin'), admin.createRoute);
+router.post('/routes-admin', requireRole('staff', 'admin'), admin.createRoute);
 router.put('/routes-admin/:id', requireRole('admin'), admin.updateRoute);
 router.delete('/routes-admin/:id', requireRole('admin'), admin.deleteRoute);
 
-// Schedules — staff can create/update trips for their branch, admin unrestricted
+// Schedules — staff can create/update for their branch, admin unrestricted
 router.get('/schedules-admin', requireRole('staff', 'admin'), admin.listAllSchedules);
 router.post('/schedules-admin', requireRole('staff', 'admin'), admin.createSchedule);
 router.put('/schedules-admin/:id', requireRole('staff', 'admin'), admin.updateSchedule);
@@ -34,15 +34,15 @@ router.get('/staff', requireRole('admin'), admin.listStaff);
 router.put('/staff/:id', requireRole('admin'), admin.updateStaff);
 router.delete('/staff/:id', requireRole('admin'), admin.deleteStaff);
 
-// Customer / user management — admin only
-router.get('/customers', requireRole('admin'), admin.listCustomers);
+// Customer / user management — staff (scoped) + admin
+router.get('/customers', requireRole('staff', 'admin'), admin.listCustomers);
 router.put('/customers/:id/active', requireRole('admin'), admin.setUserActive);
 
-// Promo codes — admin only
+// Promo codes — staff can create/manage for their branch, admin unrestricted
 router.get('/promo-codes', requireRole('staff', 'admin'), admin.listPromoCodes);
-router.post('/promo-codes', requireRole('admin'), admin.createPromoCode);
-router.put('/promo-codes/:id', requireRole('admin'), admin.updatePromoCode);
-router.delete('/promo-codes/:id', requireRole('admin'), admin.deletePromoCode);
+router.post('/promo-codes', requireRole('staff', 'admin'), admin.createPromoCode);
+router.put('/promo-codes/:id', requireRole('staff', 'admin'), admin.updatePromoCode);
+router.delete('/promo-codes/:id', requireRole('staff', 'admin'), admin.deletePromoCode);
 
 // Cancellation policies — admin only
 router.get('/policies', requireRole('staff', 'admin'), admin.listPolicies);
@@ -72,5 +72,11 @@ router.get('/featured-branches', requireRole('staff', 'admin'), admin.listFeatur
 router.post('/featured-branches', requireRole('admin'), admin.createFeaturedBranch);
 router.put('/featured-branches/:id', requireRole('admin'), admin.updateFeaturedBranch);
 router.delete('/featured-branches/:id', requireRole('admin'), admin.deleteFeaturedBranch);
+
+// Branch Updates — staff submit, admin approves
+router.get('/branch-updates', requireRole('staff', 'admin'), admin.listBranchUpdates);
+router.post('/branch-updates', requireRole('staff', 'admin'), admin.createBranchUpdate);
+router.put('/branch-updates/:id', requireRole('staff', 'admin'), admin.updateBranchUpdate);
+router.delete('/branch-updates/:id', requireRole('staff', 'admin'), admin.deleteBranchUpdate);
 
 export default router;

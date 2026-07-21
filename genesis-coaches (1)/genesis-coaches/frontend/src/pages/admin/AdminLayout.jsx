@@ -15,6 +15,7 @@ const NAV = [
   { to: '/admin/audit-logs', label: 'Audit logs' },
   { to: '/admin/popular-routes', label: 'Popular routes ✦', group: 'Homepage' },
   { to: '/admin/featured-branches', label: 'Featured branches ✦', group: 'Homepage' },
+  { to: '/admin/branch-updates', label: 'Branch updates ✦', group: 'Homepage' },
 ];
 
 export default function AdminLayout() {
