@@ -2,9 +2,8 @@ const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 
 /**
  * Sends transactional email via the Brevo (formerly Sendinblue) HTTP API.
- * Uses the runtime's native fetch — no extra HTTP client dependency needed
- * (Node 18+). Requires BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME
- * in the environment.
+ * Uses the runtime's native fetch — no extra HTTP client dependency needed.
+ * Requires BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME in the environment.
  */
 export async function sendMail({ to, subject, html }) {
   try {

@@ -17,7 +17,27 @@ import { errorHandler } from './middleware/errorHandler.js';
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL?.split(',') || '*', credentials: true }));
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map((url) => url.trim())
+  : ['http://localhost:5173', 'https://genesis-two-gules.vercel.app'];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      const isAllowed = allowedOrigins.some((allowed) => {
+        if (allowed === '*') return true;
+        return allowed.toLowerCase() === origin.toLowerCase();
+      });
+      if (isAllowed || origin.endsWith('.vercel.app') || origin.startsWith('http://localhost')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(morgan('dev'));
 
