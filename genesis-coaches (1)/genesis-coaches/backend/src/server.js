@@ -48,7 +48,8 @@ app.use('/api/auth/register', publicLimiter);
 app.use('/api/seats', publicLimiter);
 app.use('/api/schedules', publicLimiter);
 
-app.get('/health', (req, res) => res.json({ status: 'ok', service: 'genesis-coaches-api' }));
+app.get(['/', '/health'], (req, res) => res.json({ status: 'ok', service: 'genesis-coaches-api' }));
+app.head('/', (req, res) => res.status(200).end());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', catalogRoutes);

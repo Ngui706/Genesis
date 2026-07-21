@@ -188,8 +188,10 @@ export const listStaff = async (req, res, next) => {
 export const updateStaff = auditedUpdate('profiles', 'staff.update'); // e.g. deactivate, change branch
 export const deleteStaff = async (req, res, next) => {
   try {
-    await supabaseAdmin.auth.admin.deleteUser(req.params.id);
-    await logAudit({ actorId: req.profile.id, actorRole: req.profile.role, action: 'staff.delete', entityType: 'profiles', entityId: req.params.id, ip: req.ip });
+    const { id } = req.params;
+    await supabaseAdmin.from('profiles').delete().eq('id', id);
+    await supabaseAdmin.auth.admin.deleteUser(id).catch(() => {});
+    await logAudit({ actorId: req.profile.id, actorRole: req.profile.role, action: 'staff.delete', entityType: 'profiles', entityId: id, ip: req.ip });
     res.json({ message: 'Staff account removed' });
   } catch (err) { next(err); }
 };
