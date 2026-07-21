@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  html, body, #root { overflow-x: hidden; }
+  ::selection { background: #F2A93B; color: #0B0F1A; }
+  :focus-visible { outline: 2px solid #F2A93B; outline-offset: 2px; }
+}
+
+@layer components {
+  /* Signature element: the "route line" — a dashed road divider with a
+     traveling marker, used as a section break and as the booking-flow
+     step indicator. It's the one recurring visual motif across the app. */
+  .route-line {
+    position: relative;
+    height: 2px;
+    color: theme('colors.slate.dim');
+    background-image: repeating-linear-gradient(90deg, currentColor 0 14px, transparent 14px 24px);
+  }
+  .route-line-marker {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    transform: translateY(-50%);
+    border-radius: 9999px;
+    background: theme('colors.amber.DEFAULT');
+    box-shadow: 0 0 0 4px rgba(242,169,59,0.15);
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-amber px-5 py-3 font-display font-semibold text-midnight transition hover:bg-amber-dark active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/5 px-5 py-3 font-display font-semibold text-cream backdrop-blur transition hover:bg-white/10 active:scale-[0.98];
+  }
+  .card {
+    @apply rounded-2xl border border-white/10 bg-midnight-2 p-6 shadow-xl shadow-black/20;
+  }
+  .input {
+    @apply w-full rounded-lg border border-white/15 bg-midnight-3 px-4 py-3 text-cream placeholder-slate outline-none transition focus:border-amber;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-slate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
