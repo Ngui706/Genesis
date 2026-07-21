@@ -4,6 +4,8 @@
   "description": "**Beyond your Imagination.** A full-stack booking platform: React + Tailwind on the frontend, Express on the backend, Supabase (Postgres + Auth + Realtime) for data.",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install --prefix backend",
+    "start": "npm start --prefix backend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,12 +1,22 @@
 {
   "name": "genesis",
   "version": "1.0.0",
-  "description": "",
+  "description": "Genesis Coaches booking platform wrapper",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm install --prefix \"genesis-coaches (1)/genesis-coaches/backend\"",
+    "start": "npm start --prefix \"genesis-coaches (1)/genesis-coaches/backend\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ngui706/Genesis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ngui706/Genesis/issues"
+  },
+  "homepage": "https://github.com/Ngui706/Genesis#readme"
 }
