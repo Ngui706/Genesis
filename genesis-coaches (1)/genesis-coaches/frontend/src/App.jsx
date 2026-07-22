@@ -115,6 +115,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-10 text-center text-sm text-slate">
         <p className="font-display text-cream">GENESIS <span className="text-amber">COACHES</span></p>
         <p className="mt-1">Beyond your Imagination</p>
+        <a className="mt-4 inline-block text-amber hover:underline" href="mailto:chaniagenesis2015@gmail.com">chaniagenesis2015@gmail.com</a>
         <p className="mt-4 text-xs text-slate-dim">© {new Date().getFullYear()} Genesis Coaches. All rights reserved.</p>
       </div>
     </footer>

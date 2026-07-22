@@ -1,4 +1,5 @@
 import { supabaseAdmin, supabaseAsUser } from '../config/supabase.js';
+import { ADMIN_EMAIL } from '../config/admin.js';
 
 /**
  * Verifies the Supabase access token from the Authorization header,
@@ -21,6 +22,20 @@ export async function requireAuth(req, res, next) {
       .single();
     if (profileErr || !profile) return res.status(401).json({ error: 'Profile not found' });
     if (!profile.is_active) return res.status(403).json({ error: 'Account disabled' });
+
+    // The designated owner account becomes admin on its first authenticated request.
+    // This avoids hard-coding a password while still allowing a Supabase invite or
+    // normal registration flow to complete the admin setup.
+    if (userData.user.email?.toLowerCase() === ADMIN_EMAIL && profile.role !== 'admin') {
+      const { data: promoted, error: promotionError } = await supabaseAdmin
+        .from('profiles')
+        .update({ role: 'admin' })
+        .eq('id', profile.id)
+        .select('*, branch:branches(id, name, city)')
+        .single();
+      if (promotionError) return res.status(500).json({ error: 'Could not configure the admin account' });
+      Object.assign(profile, promoted);
+    }
 
     req.user = userData.user;
     req.profile = profile;

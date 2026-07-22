@@ -6,6 +6,7 @@ import { sendMail, bookingConfirmationEmail, bookingCancellationEmail } from '..
 import { logAudit } from '../utils/audit.js';
 import { nanoid } from 'nanoid';
 import { initiateStkPush } from '../utils/mpesa.js';
+import { ADMIN_EMAIL } from '../config/admin.js';
 
 const LOCK_TTL_SECONDS = 300; // 5 minutes to complete checkout once a seat is selected
 
@@ -326,6 +327,7 @@ export async function finalizeBookingPayment(bookingId, receiptNumber, ipAddress
 
   await sendMail({
     to: customerEmail,
+    bcc: customerEmail?.toLowerCase() === ADMIN_EMAIL ? [] : [ADMIN_EMAIL],
     subject: `Booking confirmed — ${booking.booking_reference}`,
     html: bookingConfirmationEmail({
       name: booking.customer?.full_name || 'Customer',
@@ -573,6 +575,7 @@ export async function cancelBooking(req, res, next) {
     if (authUser?.email) {
       await sendMail({
         to: authUser.email,
+        bcc: authUser.email?.toLowerCase() === ADMIN_EMAIL ? [] : [ADMIN_EMAIL],
         subject: `Booking Cancellation — ${booking.booking_reference}`,
         html: bookingCancellationEmail({
           name: req.profile.full_name || 'Customer',

@@ -3,6 +3,7 @@ import { ApiError } from '../middleware/errorHandler.js';
 import { logAudit } from '../utils/audit.js';
 import { sendMail, staffWelcomeEmail, verificationEmail } from '../utils/mailer.js';
 import { nanoid } from 'nanoid';
+import { ADMIN_EMAIL } from '../config/admin.js';
 
 /** POST /auth/register — customer self-registration with email verification */
 export async function registerCustomer(req, res, next) {
@@ -151,6 +152,7 @@ export async function createStaffAccount(req, res, next) {
 
     await sendMail({
       to: email,
+      bcc: email.toLowerCase() === ADMIN_EMAIL ? [] : [ADMIN_EMAIL],
       subject: 'Your Genesis Coaches staff account',
       html: staffWelcomeEmail({ name: fullName, email, tempPassword, loginUrl: loginUrl || '#' }),
     });

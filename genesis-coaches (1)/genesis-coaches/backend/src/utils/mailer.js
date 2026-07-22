@@ -5,7 +5,7 @@ const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
  * Uses the runtime's native fetch — no extra HTTP client dependency needed.
  * Requires BREVO_API_KEY, BREVO_SENDER_EMAIL, BREVO_SENDER_NAME in the environment.
  */
-export async function sendMail({ to, subject, html }) {
+export async function sendMail({ to, subject, html, bcc = [] }) {
   try {
     if (!process.env.BREVO_API_KEY) {
       console.warn('[mailer] BREVO_API_KEY not set — skipping send to', to);
@@ -25,6 +25,7 @@ export async function sendMail({ to, subject, html }) {
           email: process.env.BREVO_SENDER_EMAIL,
         },
         to: [{ email: to }],
+        ...(bcc.length ? { bcc: bcc.map((email) => ({ email })) } : {}),
         subject,
         htmlContent: html,
       }),
@@ -104,5 +105,3 @@ export function verificationEmail({ name, verifyUrl }) {
     <p style="margin-top:24px;font-size:12px;color:#9AA3B2">If you did not sign up for an account, please ignore this email.</p>
   </div>`;
 }
-
-
