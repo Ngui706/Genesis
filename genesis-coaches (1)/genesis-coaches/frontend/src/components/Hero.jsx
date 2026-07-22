@@ -39,7 +39,7 @@ export default function Hero() {
         {HERO_IMAGES.map((src, i) => (
           <div
             key={src}
-            className="absolute inset-0 bg-[length:100%_auto] bg-no-repeat bg-center sm:bg-cover transition-opacity duration-[1500ms] ease-in-out"
+            className="absolute inset-0 bg-[length:100%_auto] bg-top bg-no-repeat sm:bg-cover sm:bg-center transition-opacity duration-[1500ms] ease-in-out"
             style={{ backgroundImage: `url(${src})`, opacity: active === i ? 1 : 0 }}
             aria-hidden={active !== i}
           />
@@ -70,10 +70,10 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Search form positioned comfortably downwards below the hero image on mobile */}
+        {/* Keep the search form close to the hero image on mobile. */}
         <form
           onSubmit={handleSearch}
-          className="mt-[65vh] grid max-w-4xl grid-cols-1 gap-3 rounded-2xl border border-white/20 bg-midnight-2/80 p-4 backdrop-blur-md sm:mt-0 sm:grid-cols-4 animate-riseIn"
+          className="mt-[24vh] grid max-w-4xl grid-cols-1 gap-3 rounded-2xl border border-white/20 bg-midnight-2/80 p-4 backdrop-blur-md sm:mt-0 sm:grid-cols-4 animate-riseIn"
           style={{ animationDelay: '0.2s' }}
         >
           <div className="sm:col-span-1">
