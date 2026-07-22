@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
@@ -20,6 +20,15 @@ export default function StaffLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    if (!sidebarOpen) return undefined;
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setSidebarOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [sidebarOpen]);
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/login');
@@ -29,6 +38,8 @@ export default function StaffLayout() {
     <div className="flex min-h-screen bg-midnight">
       {/* Sidebar */}
       <aside
+        id="staff-sidebar"
+        aria-label="Staff navigation"
         className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-white/10 bg-midnight-2 transition-transform duration-300 lg:static lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -97,6 +108,10 @@ export default function StaffLayout() {
         {/* Mobile header */}
         <header className="flex items-center justify-between border-b border-white/10 bg-midnight-2 px-4 py-3 lg:hidden">
           <button
+            type="button"
+            aria-label="Open staff navigation"
+            aria-controls="staff-sidebar"
+            aria-expanded={sidebarOpen}
             onClick={() => setSidebarOpen(true)}
             className="rounded-lg p-2 text-slate hover:bg-white/5 hover:text-cream"
           >
