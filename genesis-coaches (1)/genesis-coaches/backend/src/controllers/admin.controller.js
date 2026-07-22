@@ -204,13 +204,23 @@ export const listCustomers = async (req, res, next) => {
       const branchId = req.profile.branch_id;
       if (!branchId) return res.json({ data: [] });
 
+      // 1. Get all schedules for this branch
+      const { data: schedules } = await supabaseAdmin
+        .from('schedules')
+        .select('id')
+        .eq('branch_id', branchId);
+
+      const scheduleIds = (schedules || []).map((s) => s.id);
+      if (scheduleIds.length === 0) return res.json({ data: [] });
+
+      // 2. Fetch bookings for these schedules and join customer profiles
       const { data: bookings, error: bErr } = await supabaseAdmin
         .from('bookings')
-        .select('customer_id, customer:profiles(id,full_name,email,phone,created_at,is_active), schedule:schedules(branch_id)')
+        .select('customer_id, customer:profiles!customer_id(id, full_name, email, phone, created_at, is_active)')
         .eq('status', 'confirmed')
-        .eq('schedule.branch_id', branchId);
+        .in('schedule_id', scheduleIds);
 
-      if (bErr) throw new ApiError(500, 'Failed to load customers');
+      if (bErr) throw new ApiError(500, `Failed to load branch customers: ${bErr.message}`);
 
       // Deduplicate customers
       const seen = new Set();
@@ -225,8 +235,13 @@ export const listCustomers = async (req, res, next) => {
     }
 
     // Admin: all customers
-    const { data, error } = await supabaseAdmin.from('profiles').select('*').eq('role', 'customer').order('created_at', { ascending: false });
-    if (error) throw new ApiError(500, 'Failed to load customers');
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('role', 'customer')
+      .order('created_at', { ascending: false });
+
+    if (error) throw new ApiError(500, `Failed to load customers: ${error.message}`);
     res.json({ data });
   } catch (err) { next(err); }
 };
@@ -384,7 +399,7 @@ export const listBranchUpdates = async (req, res, next) => {
   try {
     let query = supabaseAdmin
       .from('branch_updates')
-      .select('*, branch:branches(name,city), author:profiles!author_id(full_name), reviewer:profiles!reviewed_by(full_name)')
+      .select('*, branch:branches(name,city)')
       .order('created_at', { ascending: false });
 
     // Staff: only see their own branch's updates
@@ -392,7 +407,7 @@ export const listBranchUpdates = async (req, res, next) => {
       query = query.eq('branch_id', req.profile.branch_id);
     }
     const { data, error } = await query;
-    if (error) throw new ApiError(500, 'Failed to load branch updates');
+    if (error) throw new ApiError(500, `Failed to load branch updates: ${error.message}`);
     res.json({ data });
   } catch (err) { next(err); }
 };
@@ -405,7 +420,7 @@ export const listApprovedBranchUpdates = async (req, res, next) => {
       .eq('status', 'approved')
       .order('created_at', { ascending: false })
       .limit(12);
-    if (error) throw new ApiError(500, 'Failed to load branch updates');
+    if (error) throw new ApiError(500, `Failed to load branch updates: ${error.message}`);
     res.json({ data });
   } catch (err) { next(err); }
 };
