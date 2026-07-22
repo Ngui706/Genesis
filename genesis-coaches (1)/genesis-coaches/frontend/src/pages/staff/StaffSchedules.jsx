@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { ExportButtons } from '../../lib/exportData';
 
 const EMPTY = { route_id: '', bus_id: '', departure_time: '', arrival_time: '', fare: '', status: 'scheduled' };
 
@@ -87,9 +88,9 @@ export default function StaffSchedules() {
           <h1 className="mt-1 font-display text-2xl font-bold text-cream">Manage Schedules</h1>
           <p className="mt-0.5 text-xs text-slate">Trip schedules for your branch.</p>
         </div>
-        <button className="btn-primary" onClick={() => { if (showForm) setShowForm(false); else startCreate(); }}>
+        <div className="flex flex-wrap gap-2"><ExportButtons filename="staff-schedules" title="Staff schedules" rows={schedules} columns={[{ label: 'Route', getValue: (s) => `${s.route?.origin || ''} → ${s.route?.destination || ''}` }, { label: 'Bus', getValue: (s) => s.bus?.name || s.bus?.plate_number || '' }, { key: 'departure_time', label: 'Departure' }, { key: 'arrival_time', label: 'Arrival' }, { key: 'fare', label: 'Fare' }, { key: 'status', label: 'Status' }]} /><button className="btn-primary" onClick={() => { if (showForm) setShowForm(false); else startCreate(); }}>
           {showForm ? 'Cancel' : '+ Add Schedule'}
-        </button>
+        </button></div>
       </div>
       <div className="route-line my-6" />
 

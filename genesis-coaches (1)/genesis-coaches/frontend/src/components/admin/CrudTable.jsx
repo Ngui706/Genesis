@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
+import { ExportButtons } from '../../lib/exportData';
 
 /**
  * Generic list + create/edit/delete UI for simple admin-owned tables.
@@ -71,7 +72,10 @@ export default function CrudTable({ title, description, listPath, createPath, up
           <h1 className="font-display text-2xl font-bold text-cream">{title}</h1>
           {description && <p className="mt-1 text-sm text-slate">{description}</p>}
         </div>
-        {canCreate && <button onClick={openCreate} className="btn-primary !px-4 !py-2 text-sm">+ Add new</button>}
+        <div className="flex flex-wrap gap-2">
+          <ExportButtons filename={title.toLowerCase().replace(/[^a-z0-9]+/g, '-')} title={title} rows={rows} columns={columns} />
+          {canCreate && <button onClick={openCreate} className="btn-primary !px-4 !py-2 text-sm">+ Add new</button>}
+        </div>
       </div>
 
       <div className="card overflow-x-auto !p-0">

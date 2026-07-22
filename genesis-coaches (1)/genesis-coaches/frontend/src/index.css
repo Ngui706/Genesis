@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --theme-midnight: 11 15 26;
+  --theme-midnight-2: 18 24 38;
+  --theme-midnight-3: 26 34 51;
+  --theme-primary: 242 169 59;
+  --theme-primary-dark: 217 142 31;
+  --theme-primary-light: 251 206 133;
+  --theme-teal: 30 127 114;
+  --theme-teal-dark: 21 90 81;
+  --theme-teal-light: 63 179 163;
+  --theme-cream: 247 244 236;
+  --theme-slate: 136 144 160;
+  --theme-slate-dim: 91 100 114;
+  --theme-danger: 225 85 84;
+}
+
 @layer base {
   html { scroll-behavior: smooth; }
   html, body, #root { overflow-x: hidden; }

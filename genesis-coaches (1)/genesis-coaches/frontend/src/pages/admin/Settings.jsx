@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Settings() {
   const [settings, setSettings] = useState({});
   const [policies, setPolicies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPolicy, setNewPolicy] = useState({ name: '', hours_before_departure: '', refund_percentage: '' });
+  const { updateBranding } = useTheme();
 
   const load = () => {
     setLoading(true);
@@ -25,6 +27,7 @@ export default function Settings() {
   const saveSetting = async (key, value) => {
     try {
       await apiFetch(`/admin/settings/${key}`, { method: 'PUT', body: JSON.stringify({ value }) });
+      if (key === 'branding') updateBranding(value);
       toast.success('Saved');
       load();
     } catch (err) { toast.error(err.message); }
@@ -59,6 +62,17 @@ export default function Settings() {
   if (loading) return <p className="text-slate">Loading settings…</p>;
 
   const branding = settings.branding || {};
+  const updateBrandingSetting = (key, value) => {
+    const next = { ...branding, [key]: value };
+    setSettings((current) => ({ ...current, branding: next }));
+    updateBranding(next);
+    return saveSetting('branding', next);
+  };
+
+  const previewBranding = (key, value) => {
+    setSettings((current) => ({ ...current, branding: { ...branding, [key]: value } }));
+    updateBranding({ [key]: value });
+  };
 
   return (
     <div className="space-y-8">
@@ -74,6 +88,7 @@ export default function Settings() {
           <input
             type="number"
             className="input max-w-[140px]"
+            key={settings.booking_window_days}
             defaultValue={settings.booking_window_days ?? 30}
             onBlur={(e) => saveSetting('booking_window_days', Number(e.target.value))}
           />
@@ -86,19 +101,19 @@ export default function Settings() {
         <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div>
             <label className="label">Company name</label>
-            <input className="input" defaultValue={branding.company_name} onBlur={(e) => saveSetting('branding', { ...branding, company_name: e.target.value })} />
+            <input className="input" defaultValue={branding.company_name} onBlur={(e) => updateBrandingSetting('company_name', e.target.value)} />
           </div>
           <div>
             <label className="label">Tagline</label>
-            <input className="input" defaultValue={branding.tagline} onBlur={(e) => saveSetting('branding', { ...branding, tagline: e.target.value })} />
+            <input className="input" defaultValue={branding.tagline} onBlur={(e) => updateBrandingSetting('tagline', e.target.value)} />
           </div>
           <div>
             <label className="label">Primary color</label>
-            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" defaultValue={branding.primary_color || '#F2A93B'} onBlur={(e) => saveSetting('branding', { ...branding, primary_color: e.target.value })} />
+            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" value={branding.primary_color || '#F2A93B'} onChange={(e) => previewBranding('primary_color', e.target.value)} onBlur={(e) => updateBrandingSetting('primary_color', e.target.value)} />
           </div>
           <div>
             <label className="label">Dark background color</label>
-            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" defaultValue={branding.dark_color || '#0B0F1A'} onBlur={(e) => saveSetting('branding', { ...branding, dark_color: e.target.value })} />
+            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" value={branding.dark_color || '#0B0F1A'} onChange={(e) => previewBranding('dark_color', e.target.value)} onBlur={(e) => updateBrandingSetting('dark_color', e.target.value)} />
           </div>
         </div>
       </div>

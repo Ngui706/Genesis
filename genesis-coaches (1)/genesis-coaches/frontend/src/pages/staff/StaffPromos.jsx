@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { ExportButtons } from '../../lib/exportData';
 
 const EMPTY = { code: '', discount_type: 'percent', discount_value: '', max_uses: '', expires_at: '', is_active: true };
 
@@ -62,9 +63,9 @@ export default function StaffPromos() {
           <h1 className="mt-1 font-display text-2xl font-bold text-cream">Promo Codes</h1>
           <p className="mt-0.5 text-xs text-slate">Codes are automatically scoped to your branch.</p>
         </div>
-        <button className="btn-primary" onClick={() => setShowForm((v) => !v)}>
+        <div className="flex flex-wrap gap-2"><ExportButtons filename="staff-promo-codes" title="Staff promo codes" rows={promos} columns={[{ key: 'code', label: 'Code' }, { key: 'discount_type', label: 'Type' }, { key: 'discount_value', label: 'Value' }, { key: 'max_uses', label: 'Max uses' }, { key: 'expires_at', label: 'Expires' }, { label: 'Status', getValue: (p) => p.is_active ? 'Active' : 'Inactive' }]} /><button className="btn-primary" onClick={() => setShowForm((v) => !v)}>
           {showForm ? 'Cancel' : '+ Create Promo'}
-        </button>
+        </button></div>
       </div>
       <div className="route-line my-6" />
 

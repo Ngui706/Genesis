@@ -329,6 +329,20 @@ export const listSettings = async (req, res, next) => {
     res.json({ data });
   } catch (err) { next(err); }
 };
+
+// Public branding only; operational settings remain admin-protected.
+export const listPublicSettings = async (req, res, next) => {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('system_settings')
+      .select('key, value')
+      .eq('key', 'branding')
+      .maybeSingle();
+    if (error) throw new ApiError(500, 'Failed to load public settings');
+    res.json({ data: { branding: data?.value || {} } });
+  } catch (err) { next(err); }
+};
+
 export const updateSetting = async (req, res, next) => {
   try {
     const { value } = req.body;

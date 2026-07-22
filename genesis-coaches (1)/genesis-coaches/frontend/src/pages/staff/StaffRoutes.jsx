@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
+import { ExportButtons } from '../../lib/exportData';
 
 const EMPTY = { origin: '', destination: '', distance_km: '', duration_minutes: '' };
 
@@ -43,7 +44,7 @@ export default function StaffRoutes() {
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Network</p>
           <h1 className="mt-1 font-display text-2xl font-bold text-cream">Manage Routes</h1>
         </div>
-        <button className="btn-primary" onClick={() => setShowForm((v) => !v)}>{showForm ? 'Cancel' : '+ Add Route'}</button>
+        <div className="flex flex-wrap gap-2"><ExportButtons filename="staff-routes" title="Staff routes" rows={routes} columns={[{ key: 'origin', label: 'Origin' }, { key: 'destination', label: 'Destination' }, { key: 'distance_km', label: 'Distance (km)' }, { key: 'duration_minutes', label: 'Duration (minutes)' }]} /><button className="btn-primary" onClick={() => setShowForm((v) => !v)}>{showForm ? 'Cancel' : '+ Add Route'}</button></div>
       </div>
       <div className="route-line my-6" />
 

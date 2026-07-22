@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { ExportButtons } from '../../lib/exportData';
 
 const EMPTY = { plate_number: '', name: '', bus_class: 'standard', seat_layout: { rows: 10, columns: 4 }, amenities: [] };
 
@@ -39,7 +40,7 @@ export default function StaffBuses() {
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Fleet</p>
           <h1 className="mt-1 font-display text-2xl font-bold text-cream">Manage Buses</h1>
         </div>
-        <button className="btn-primary" onClick={() => setShowForm((v) => !v)}>{showForm ? 'Cancel' : '+ Add Bus'}</button>
+        <div className="flex flex-wrap gap-2"><ExportButtons filename="staff-buses" title="Staff buses" rows={buses} columns={[{ key: 'plate_number', label: 'Plate' }, { key: 'name', label: 'Name' }, { key: 'bus_class', label: 'Class' }, { key: 'total_seats', label: 'Seats' }, { key: 'is_active', label: 'Active' }]} /><button className="btn-primary" onClick={() => setShowForm((v) => !v)}>{showForm ? 'Cancel' : '+ Add Bus'}</button></div>
       </div>
       <div className="route-line my-6" />
 

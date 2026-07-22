@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 
 // Real Genesis Coaches fleet photography, served from /public/hero.
 const HERO_IMAGES = [
@@ -20,6 +21,7 @@ export default function Hero() {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [date, setDate] = useState('');
+  const { branding } = useTheme();
 
   useEffect(() => {
     const id = setInterval(() => setActive((i) => (i + 1) % HERO_IMAGES.length), ROTATE_MS);
@@ -61,7 +63,7 @@ export default function Hero() {
             className="mt-1.5 font-display text-lg font-medium text-amber drop-shadow-md sm:mt-2 sm:text-3xl md:text-4xl animate-riseIn"
             style={{ animationDelay: '0.1s' }}
           >
-            Beyond your Imagination
+            {branding.tagline || 'Beyond your Imagination'}
           </p>
 
           {/* Signature route-line divider */}

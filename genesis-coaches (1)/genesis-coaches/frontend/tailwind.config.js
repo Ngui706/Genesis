@@ -4,12 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        midnight: { DEFAULT: '#0B0F1A', 2: '#121826', 3: '#1A2233' },
-        amber: { DEFAULT: '#F2A93B', dark: '#D98E1F', light: '#FBCE85' },
-        teal: { DEFAULT: '#1E7F72', dark: '#155A51', light: '#3FB3A3' },
-        cream: '#F7F4EC',
-        slate: { DEFAULT: '#8890A0', dim: '#5B6472' },
-        danger: '#E15554',
+        midnight: { DEFAULT: 'rgb(var(--theme-midnight) / <alpha-value>)', 2: 'rgb(var(--theme-midnight-2) / <alpha-value>)', 3: 'rgb(var(--theme-midnight-3) / <alpha-value>)' },
+        amber: { DEFAULT: 'rgb(var(--theme-primary) / <alpha-value>)', dark: 'rgb(var(--theme-primary-dark) / <alpha-value>)', light: 'rgb(var(--theme-primary-light) / <alpha-value>)' },
+        teal: { DEFAULT: 'rgb(var(--theme-teal) / <alpha-value>)', dark: 'rgb(var(--theme-teal-dark) / <alpha-value>)', light: 'rgb(var(--theme-teal-light) / <alpha-value>)' },
+        cream: 'rgb(var(--theme-cream) / <alpha-value>)',
+        slate: { DEFAULT: 'rgb(var(--theme-slate) / <alpha-value>)', dim: 'rgb(var(--theme-slate-dim) / <alpha-value>)' },
+        danger: 'rgb(var(--theme-danger) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'sans-serif'],

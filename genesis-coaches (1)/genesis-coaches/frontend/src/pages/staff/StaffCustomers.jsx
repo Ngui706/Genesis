@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { ExportButtons } from '../../lib/exportData';
 
 export default function StaffCustomers() {
   const { profile } = useAuth();
@@ -27,6 +28,7 @@ export default function StaffCustomers() {
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">People</p>
       <h1 className="mt-1 font-display text-2xl font-bold text-cream">Branch Customers</h1>
       <p className="mt-0.5 text-xs text-slate">Customers who have booked trips on your branch.</p>
+      <div className="mt-4"><ExportButtons filename="staff-customers" title="Branch customers" rows={filtered} columns={[{ key: 'full_name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }, { label: 'Status', getValue: (c) => c.is_active ? 'Active' : 'Suspended' }, { label: 'Joined', getValue: (c) => new Date(c.created_at).toLocaleDateString() }]} /></div>
       <div className="route-line my-6" />
 
       <input
