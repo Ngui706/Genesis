@@ -10,12 +10,6 @@ const DEFAULTS = {
   dark_color: '#0B0F1A',
 };
 
-function hexToRgb(hex) {
-  const value = String(hex || '').replace('#', '');
-  if (!/^[0-9a-f]{6}$/i.test(value)) return null;
-  return [parseInt(value.slice(0, 2), 16), parseInt(value.slice(2, 4), 16), parseInt(value.slice(4, 6), 16)].join(' ');
-}
-
 export function ThemeProvider({ children }) {
   const [branding, setBranding] = useState(DEFAULTS);
   const [mode, setMode] = useState(() => localStorage.getItem('genesis-theme-mode') || 'dark');
@@ -32,8 +26,10 @@ export function ThemeProvider({ children }) {
   }, []);
 
   const style = useMemo(() => {
-    const primary = hexToRgb(branding.primary_color) || hexToRgb(DEFAULTS.primary_color);
-    const dark = hexToRgb(branding.dark_color) || hexToRgb(DEFAULTS.dark_color);
+    // Keep the original Genesis brand palette fixed. Mode only changes the
+    // surrounding surface and text contrast.
+    const primary = '242 169 59';
+    const dark = '11 15 26';
     const palette = mode === 'light'
       ? {
         '--theme-midnight': '248 250 252', '--theme-midnight-2': '255 255 255', '--theme-midnight-3': '241 245 249',

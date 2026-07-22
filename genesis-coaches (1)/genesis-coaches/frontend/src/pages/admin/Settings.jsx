@@ -69,11 +69,6 @@ export default function Settings() {
     return saveSetting('branding', next);
   };
 
-  const previewBranding = (key, value) => {
-    setSettings((current) => ({ ...current, branding: { ...branding, [key]: value } }));
-    updateBranding({ [key]: value });
-  };
-
   return (
     <div className="space-y-8">
       <div>
@@ -107,14 +102,7 @@ export default function Settings() {
             <label className="label">Tagline</label>
             <input className="input" defaultValue={branding.tagline} onBlur={(e) => updateBrandingSetting('tagline', e.target.value)} />
           </div>
-          <div>
-            <label className="label">Primary color</label>
-            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" value={branding.primary_color || '#F2A93B'} onChange={(e) => previewBranding('primary_color', e.target.value)} onBlur={(e) => updateBrandingSetting('primary_color', e.target.value)} />
-          </div>
-          <div>
-            <label className="label">Dark background color</label>
-            <input type="color" className="h-11 w-full rounded-lg border border-white/15 bg-midnight-3" value={branding.dark_color || '#0B0F1A'} onChange={(e) => previewBranding('dark_color', e.target.value)} onBlur={(e) => updateBrandingSetting('dark_color', e.target.value)} />
-          </div>
+          <p className="text-xs text-slate sm:col-span-2">Genesis brand colors remain fixed. Use the light/dark mode toggle in the navigation to change the interface appearance.</p>
         </div>
       </div>
 
