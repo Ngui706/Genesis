@@ -33,7 +33,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative flex min-h-[125vh] flex-col justify-between overflow-hidden pb-8 pt-3 sm:min-h-[88vh] sm:justify-center sm:py-16 md:py-24">
+    <section className="relative flex min-h-[92vh] flex-col justify-between overflow-hidden pb-8 pt-3 sm:min-h-[88vh] sm:justify-center sm:py-16 md:py-24">
       {/* Rotating background layer */}
       <div className="absolute inset-0">
         {HERO_IMAGES.map((src, i) => (

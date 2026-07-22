@@ -32,7 +32,7 @@ export default function Home() {
       <Hero />
 
       {/* ── Why travel with us ── */}
-      <section className="mx-auto max-w-6xl px-6 py-20">
+      <section className="mx-auto max-w-6xl px-6 py-12 sm:py-20">
         <div className="mb-10 flex items-end justify-between">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Why travel with us</p>
