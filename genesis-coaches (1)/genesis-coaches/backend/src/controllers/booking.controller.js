@@ -2,7 +2,7 @@ import { supabaseAdmin } from '../config/supabase.js';
 import { ApiError } from '../middleware/errorHandler.js';
 import { generateBookingReference, signTicketPayload, renderQrDataUrl } from '../utils/qrTicket.js';
 import { generateTicketPdfBuffer } from '../utils/pdfTicket.js';
-import { sendMail, bookingConfirmationEmail } from '../utils/mailer.js';
+import { sendMail, bookingConfirmationEmail, bookingCancellationEmail } from '../utils/mailer.js';
 import { logAudit } from '../utils/audit.js';
 import { nanoid } from 'nanoid';
 import { initiateStkPush } from '../utils/mpesa.js';
@@ -568,6 +568,19 @@ export async function cancelBooking(req, res, next) {
       metadata: { refundAmount, refundPercentage },
       ip: req.ip,
     });
+
+    const { data: { user: authUser } } = await supabaseAdmin.auth.admin.getUserById(booking.customer_id);
+    if (authUser?.email) {
+      await sendMail({
+        to: authUser.email,
+        subject: `Booking Cancellation — ${booking.booking_reference}`,
+        html: bookingCancellationEmail({
+          name: req.profile.full_name || 'Customer',
+          reference: booking.booking_reference,
+          refundAmount: refundAmount > 0 ? `KES ${refundAmount.toFixed(2)}` : 'None',
+        }),
+      }).catch((mailErr) => console.error('[mailer] Cancellation mail failed:', mailErr.message));
+    }
 
     res.json({ message: 'Booking cancelled', refundAmount, refundPercentage });
   } catch (err) {

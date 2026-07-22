@@ -8,6 +8,7 @@ export default function Register() {
   const [form, setForm] = useState({ fullName: '', email: '', phone: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState(null);
 
   const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -15,15 +16,38 @@ export default function Register() {
     e.preventDefault();
     setLoading(true);
     try {
-      await apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(form) });
-      toast.success('Account created — please log in');
-      navigate('/login');
+      const res = await apiFetch('/auth/register', { method: 'POST', body: JSON.stringify(form) });
+      toast.success(res.message || 'Account created! Please check your email.');
+      setRegisteredEmail(form.email);
     } catch (err) {
       toast.error(err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
   };
+
+  if (registeredEmail) {
+    return (
+      <div className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16 text-center">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Verification Sent</p>
+        <h1 className="mt-2 font-display text-3xl font-bold text-cream">Check your email</h1>
+        <div className="route-line my-6"><span className="route-line-marker" style={{ left: '50%' }} /></div>
+
+        <div className="card space-y-4 p-8">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber/10 text-2xl text-amber">
+            ✉️
+          </div>
+          <p className="font-display text-lg font-semibold text-cream">Verify your email address</p>
+          <p className="text-xs text-slate">
+            We sent a verification link to <span className="font-mono text-amber">{registeredEmail}</span>. Please open your email inbox and click the verification button to activate your account.
+          </p>
+          <Link to="/login" className="btn-primary inline-block w-full">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-md flex-col justify-center px-6 py-16">

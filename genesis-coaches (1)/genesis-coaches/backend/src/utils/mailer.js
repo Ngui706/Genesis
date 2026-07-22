@@ -68,3 +68,41 @@ export function staffWelcomeEmail({ name, email, tempPassword, loginUrl }) {
     <a href="${loginUrl}" style="display:inline-block;margin-top:16px;background:#F2A93B;color:#0B0F1A;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:600">Log in</a>
   </div>`;
 }
+
+export function bookingCancellationEmail({ name, reference, refundAmount }) {
+  return `
+  <div style="font-family:Inter,Arial,sans-serif;background:#0B0F1A;padding:32px;color:#F7F4EC">
+    <h1 style="color:#F2A93B;margin:0 0 4px">Genesis Coaches</h1>
+    <p style="color:#9AA3B2;margin:0 0 24px">Booking Cancellation</p>
+    <h2 style="color:#F7F4EC">Booking Cancelled</h2>
+    <p>Hi ${name}, your booking <strong>${reference}</strong> has been cancelled.</p>
+    <p style="margin-top:12px;color:#9AA3B2">Refund Amount: <strong style="color:#F7F4EC">${refundAmount}</strong></p>
+    <p style="margin-top:24px">If you have any questions, please contact customer support.</p>
+  </div>`;
+}
+
+export function refundStatusEmail({ name, reference, status, amount }) {
+  return `
+  <div style="font-family:Inter,Arial,sans-serif;background:#0B0F1A;padding:32px;color:#F7F4EC">
+    <h1 style="color:#F2A93B;margin:0 0 4px">Genesis Coaches</h1>
+    <p style="color:#9AA3B2;margin:0 0 24px">Refund Status Update</p>
+    <h2 style="color:#F7F4EC">Refund ${status.toUpperCase()}</h2>
+    <p>Hi ${name}, the refund for booking <strong>${reference}</strong> has been updated to <strong>${status}</strong>.</p>
+    <p style="margin-top:12px;color:#9AA3B2">Amount: <strong style="color:#F7F4EC">${amount}</strong></p>
+  </div>`;
+}
+
+export function verificationEmail({ name, verifyUrl }) {
+  return `
+  <div style="font-family:Inter,Arial,sans-serif;background:#0B0F1A;padding:32px;color:#F7F4EC">
+    <h1 style="color:#F2A93B;margin:0 0 4px">Genesis Coaches</h1>
+    <p style="color:#9AA3B2;margin:0 0 24px">Beyond your Imagination</p>
+    <h2 style="color:#F7F4EC">Verify your Email Address</h2>
+    <p>Hi ${name}, thank you for registering with Genesis Coaches.</p>
+    <p>Please click the button below to verify your email address and activate your account for log in.</p>
+    <a href="${verifyUrl}" style="display:inline-block;margin-top:20px;background:#F2A93B;color:#0B0F1A;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;font-size:15px">Verify Email Address</a>
+    <p style="margin-top:24px;font-size:12px;color:#9AA3B2">If you did not sign up for an account, please ignore this email.</p>
+  </div>`;
+}
+
+

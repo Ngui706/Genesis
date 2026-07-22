@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
+import { apiFetch } from '../lib/supabase';
 
 export default function Login() {
   const { signIn } = useAuth();
@@ -11,18 +12,43 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState(null);
+  const [resending, setResending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setUnverifiedEmail(null);
     try {
       await signIn(email, password);
       toast.success('Welcome back!');
       navigate(location.state?.from?.pathname || '/');
     } catch (err) {
-      toast.error(err.message || 'Login failed');
+      const msg = err.message || '';
+      if (msg.toLowerCase().includes('not confirmed') || msg.toLowerCase().includes('email_not_confirmed')) {
+        setUnverifiedEmail(email);
+        toast.error('Email not verified. Please verify your email before logging in.');
+      } else {
+        toast.error(msg || 'Login failed');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!unverifiedEmail) return;
+    setResending(true);
+    try {
+      const res = await apiFetch('/auth/resend-verification', {
+        method: 'POST',
+        body: JSON.stringify({ email: unverifiedEmail }),
+      });
+      toast.success(res.message || 'Verification link sent to your email!');
+    } catch (err) {
+      toast.error(err.message || 'Failed to send verification email');
+    } finally {
+      setResending(false);
     }
   };
 
@@ -31,6 +57,23 @@ export default function Login() {
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-amber">Welcome back</p>
       <h1 className="mt-2 font-display text-3xl font-bold text-cream">Log in to your account</h1>
       <div className="route-line my-6"><span className="route-line-marker" style={{ left: '10%' }} /></div>
+
+      {unverifiedEmail && (
+        <div className="mb-6 rounded-xl border border-amber/30 bg-amber/10 p-4 text-left">
+          <p className="font-semibold text-amber">Email Verification Required</p>
+          <p className="mt-1 text-xs text-slate">
+            Your email address (<span className="text-cream">{unverifiedEmail}</span>) has not been verified yet. Please check your inbox for the verification link.
+          </p>
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={resending}
+            className="btn-secondary mt-3 w-full text-xs"
+          >
+            {resending ? 'Sending email…' : 'Resend Verification Email'}
+          </button>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="card space-y-4">
         <div>
