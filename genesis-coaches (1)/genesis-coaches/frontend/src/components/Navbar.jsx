@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const linkClass = ({ isActive }) =>
   `text-sm font-medium transition ${isActive ? 'text-amber' : 'text-cream/80 hover:text-cream'}`;
@@ -9,6 +10,7 @@ export default function Navbar() {
   const { isAuthenticated, profile, signOut, role } = useAuth();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { mode, toggleMode } = useTheme();
 
   const handleSignOut = async () => {
     await signOut();
@@ -31,6 +33,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
+          <button type="button" onClick={toggleMode} className="btn-secondary !px-3 !py-2 text-sm" aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`} title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>{mode === 'dark' ? '☀' : '☾'}</button>
           {isAuthenticated ? (
             <>
               <span className="text-sm text-slate">Hi, {profile?.full_name?.split(' ')[0]}</span>
@@ -61,7 +64,7 @@ export default function Navbar() {
             {isAuthenticated && <NavLink to="/bookings" onClick={() => setOpen(false)} className={linkClass}>My bookings</NavLink>}
             {role === 'staff' && <NavLink to="/staff" onClick={() => setOpen(false)} className={linkClass}>Staff desk</NavLink>}
             {role === 'admin' && <NavLink to="/admin" onClick={() => setOpen(false)} className={linkClass}>Admin</NavLink>}
-            <div className="route-line my-1" />
+            <div className="flex items-center justify-between"><div className="route-line my-1 flex-1" /><button type="button" onClick={toggleMode} className="ml-4 text-sm text-amber" aria-label={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>{mode === 'dark' ? '☀ Light mode' : '☾ Dark mode'}</button></div>
             {isAuthenticated ? (
               <button onClick={handleSignOut} className="btn-secondary">Sign out</button>
             ) : (
